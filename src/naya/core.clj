@@ -1,4 +1,4 @@
-(ns plate.core
+(ns naya.core
   (:gen-class))
 
 
