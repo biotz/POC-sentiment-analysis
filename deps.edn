@@ -1,9 +1,26 @@
 {:paths ["src"]
- :deps  {org.clojure/core.async {:mvn/version "1.6.673"}}
+ :deps { org.clojure/core.async              {:mvn/version "1.6.673"}
+         org.clojure/tools.logging           {:mvn/version "1.1.0"}
+         org.apache.logging.log4j/log4j-core {:mvn/version "2.18.0"}
+         org.apache.logging.log4j/log4j-api  {:mvn/version "2.18.0"}
+         org.apache.logging.log4j/log4j-jcl  {:mvn/version "2.18.0"}}
+
  :aliases  {:build {:paths ["src"]
                     :extra-deps {io.github.clojure/tools.build {:git/tag "v0.9.3" :git/sha "e537cd1"}}
-                    :ns-default build}
+                    :ns-default build
+                    :jvm-opts ["-Dlog4j2.Script.enableLanguages=javascript"]}
             :dev {:extra-paths ["dev"]
-                  :extra-deps {nrepl/nrepl {:mvn/version "LATEST"}
-                               cider/cider-nrepl {:mvn/version "LATEST"}}}}}
+                  :extra-deps {nrepl/nrepl       {:mvn/version "0.9.0"}
+                               cider/cider-nrepl {:mvn/version "0.28.4"}
+                               hashp/hashp  {:mvn/version "LATEST"}}
+                  :jvm-opts ["-Dlog4j2.Script.enableLanguages=javascript"]}
+
+            :repl/conjure {:extra-deps {nrepl/nrepl       {:mvn/version "0.9.0"}
+                                        cider/cider-nrepl {:mvn/version "0.28.4"}
+                                        hashp/hashp  {:mvn/version "LATEST"}}
+                           :main-opts  ["-m" "nrepl.cmdline"
+                                        "--middleware" "[cider.nrepl/cider-middleware]"
+                                        "--interactive"]}}}
+
+
 
