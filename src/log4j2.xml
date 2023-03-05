@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+  <Appenders>
+    <!-- console output -->
+    <Console name="Console" target="SYSTEM_OUT" follow="true">
+      <PatternLayout disableAnsi="false"  pattern="%highlight{%d{HH:mm:ss.SSS} %-5level %logger{36}.%M() @%L - %msg%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=Cyan, DEBUG=green bold, TRACE=blue}"/>
+    </Console>
+  </Appenders>
+
+  <Loggers>
+    <Root level="debug" includeLocation="false">
+      <AppenderRef ref="Console" >
+        <ScriptFilter onMatch="ACCEPT" onMisMatch="DENY">
+          <Script name="JavascriptFilter" language="JavaScript"><![CDATA[
+            var result = true;
+            if (logEvent.getMarker() != null && logEvent.getMarker().isInstanceOf("FLOW")) {
+            result = true;
+            } else if (logEvent.getLoggerName().contains("org.apache.qpid.jms.provider.amqp.builders.AmqpProducerBuilder")) {
+            result = false;
+            } else if (logEvent.getLoggerName().contains("org.apache.qpid.jms.provider.amqp.AmqpConsumer")) {
+            result = false;
+            } else if (logEvent.getLoggerName().contains("io.netty.buffer.PooledByteBufAllocator.")) {
+            result = false;
+            } else if (logEvent.getLoggerName().contains("org.eclipse.jetty.server.session")) {
+            result = false;
+            } else if (logEvent.getLoggerName().contains("org.eclipse.jetty.util.thread.QueuedThreadPool")) {
+            result = false;
+            }  else if (logEvent.getLoggerName().contains("org.eclipse.jetty.util.thread.ReservedThreadExecutor")) {
+            result = false;
+            } else if (logEvent.getLoggerName().contains("org.eclipse.jetty")) {
+            result = false;
+            }
+            result;
+            ]]>
+        </Script>
+      </ScriptFilter>
+    </AppenderRef>
+  </Root>
+</Loggers>
+</Configuration>
