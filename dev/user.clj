@@ -22,20 +22,22 @@
 
 (spit "./.nrepl-port" (:port nrepl-server))
 
-(defn- delivery-fn [acc direction]
-  (let [[path [x y]] acc
-         new-position (case  direction
-                        "^" [x (inc y)]
-                        "<" [(dec x) y]
-                        ">" [(inc x) y]
-                        "v" [x (dec y)])]
+(defn- delivery-fn [[path first-person-direction  second-person-direction  turn  ]   direction]
+  (let [[x y] (if (= 1  turn)  first-person-direction second-person-direction)
+        new-position (case  direction
+                       "^" [x (inc y)]
+                       "<" [(dec x) y]
+                       ">" [(inc x) y]
+                       "v" [x (dec y)])]
 
-    [(conj path new-position) new-position]))
+   (if  (= 1 turn)
+     [(conj path new-position) new-position second-person-direction 2]
+     [(conj path new-position) first-person-direction new-position  1])))
 
 
 
 (defn pizza-delivery [starting-position  path]
-  (reduce delivery-fn  [#{ starting-position  } starting-position] path))
+  (reduce delivery-fn  [#{starting-position} starting-position  starting-position 1] path))
 
 
 
