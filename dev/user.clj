@@ -1,8 +1,6 @@
 (ns user
   (:require [nrepl.server :as nrepl]
             [cider.nrepl :refer (cider-nrepl-handler)]
-            #_[clojure.reflect :refer [reflect]]
-            [hashp.core]
             [clojure.tools.logging :as log]))
 
 (log/info "starting repl")
