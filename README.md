@@ -28,17 +28,19 @@ It is convenient to use a tool to manage the environment on a per-project basis,
 
 Setup
 1. <a href="https://www.bing.com/search?form=SKPBOT&q=Clone%20the%20repository">Clone the repository</a>:
-
+```
 git clone <repository-url>
 cd <repository-directory>
+```
 
 1. Set up the environment:
-•  Install Python dependencies:
+
+Install Python dependencies:
 ```
 pip install pysentimiento
 ```
 
-•  Or create a conda environment and install pysentimiento.
+Or create a conda environment and install pysentimiento.
 
 Running the Service
 
@@ -52,9 +54,7 @@ clj -T:build uber
 java -jar target/sentiment-analysis-1.2.10-standalone.jar
 ```
 
-3. Server will run on port 3000:    
-
-server running on port 3000         
+3. Server will run on port 3000:        
 
 API Endpoints   
 Health Check   
