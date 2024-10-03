@@ -5,22 +5,34 @@
             [muuntaja.core :as m]
             [reitit.ring.coercion :as coercion]
             [reitit.ring :as ring]
-            [libpython-clj2.python :as py])
+            [libpython-clj2.python :as py]
+            [libpython-clj2.require :refer [require-python]]) 
   (:gen-class))
 
-(py/initialize!)
-#_(initialize! ; Python executable
-              :python-executable "C:\\Users\\USER\\AppData\\Local\\Continuum\\anaconda3\\python.exe"
-              ; Python Library
-              :library-path "C:\\Users\\USER\\AppData\\Local\\Continuum\\anaconda3\\python37.dll"
-              ; Anacondas PATH environment to load native dlls of modules (numpy, etc.)
-              :windows-anaconda-activate-bat "C:\\Users\\USER\\AppData\\Local\\Continuum\\anaconda3\\Scripts\\activate.bat")
+(require-python '[pysentimiento :as sentiment])
 
-:ok
+(def conda (System/getenv  "CONDA_BASE_PATH"))
+
+(def | (System/getProperty  "file.separator"))
+
+(defn initialize-python- []
+  (let [delayed-initialize (delay (py/initialize! ; Python executable
+                                                  :python-executable   (str conda  | "bin" | "python")
+                                                  ; Python Library
+                                                  :library-path (str conda  | "bin" | "python")))]))
+
+
+(def analyzer  (delay (sentiment/create_analyzer :task "sentiment" :lang "es")))
 
 
 (def routes
  [["/health" {:get {:handler (fn [& x ] {:status 200})}}] 
+  ["/sentiment" {:post
+                 {:handler 
+                  (fn [{{:keys [data]} :body-params :as req}]
+                    {:status 200
+                     :body {:sentiment  req #_(py/py. @analyzer predict data)}})}}]
+
   ["/plain" ["/plus" {:get
                       {:handler
                        (fn [{{:strs [x y]} :query-params :as req}]
