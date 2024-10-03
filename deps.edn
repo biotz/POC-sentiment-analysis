@@ -1,0 +1,9 @@
+{:paths ["src"]
+ :deps  {org.clojure/core.async {:mvn/version "1.6.673"}}
+ :aliases  {:build {:paths ["src"]
+                    :extra-deps {io.github.clojure/tools.build {:git/tag "v0.9.3" :git/sha "e537cd1"}}
+                    :ns-default build}
+            :dev {:extra-paths ["dev"]
+                  :extra-deps {nrepl/nrepl {:mvn/version "LATEST"}
+                               cider/cider-nrepl {:mvn/version "LATEST"}}}}}
+
