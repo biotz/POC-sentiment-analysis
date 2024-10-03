@@ -36,21 +36,24 @@ cd <repository-directory>
 1. 
 Set up the environment:
 •  Install Python dependencies:
-
+```
 pip install pysentimiento
+```
 
 •  Or create a conda environment and install pysentimiento.
 
 Running the Service
 1. .. 
 Build the uberjar:
-
+```
 clj -T:build uber
+```
 
 2. 
 Run the server:
-
+```
 java -jar target/sentiment-analysis-1.2.10-standalone.jar
+```
 
 3.  
 Server will run on port 3000:    
@@ -64,10 +67,11 @@ Health Check
 •  Method: GET
 
 •  Response:
-
+```json
 {
 "status": 200
 }
+```
 
 Sentiment Analysis
 •  Endpoint: /sentiment
@@ -75,13 +79,13 @@ Sentiment Analysis
 •  Method: POST
 
 •  Request Body:
-
+```json
 {
 "data": "Your text here"
 }
-
+```
 •  Response:
-
+```json
 {
 "sentimiento": "Positivo/Negativo/Neutro",
 "probabilidades": {
@@ -90,6 +94,7 @@ Sentiment Analysis
 "Neutro": "xx.x%"
 }
 }
+```
 
 Code Overview     
 •  Namespace: sentiment-analysis.core         
