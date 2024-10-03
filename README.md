@@ -74,12 +74,9 @@ Sentiment Analysis
 
 •  Method: POST
 
-•  Request Body:
-```json
-{
-"data": "Your text here"
-}
-```
+•  Request parameters:
+data="Your text goes here"
+
 •  Response:
 ```json
 {
@@ -92,6 +89,9 @@ Sentiment Analysis
 }
 ```
 
+
+• Example : ```curl -XPOST 'http://localhost:3000/sentiment' -d 'data=Un Golf no se compra se alcanza' ```
+    response : ``` {"sentimiento":"Positivo","probabilidades":{"Negativo":"7.2%","Positivo":"58.3%","Neutro":"34.4%"}}  ```
 Code Overview     
 •  Namespace: sentiment-analysis.core         
 
