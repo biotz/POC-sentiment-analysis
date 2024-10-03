@@ -6,7 +6,8 @@
             [reitit.ring.coercion :as coercion]
             [reitit.ring :as ring]
             [libpython-clj2.python :as py]
-            [libpython-clj2.require :refer [require-python]]) 
+            [libpython-clj2.require :refer [require-python]] 
+            [clojure.set :refer [rename-keys]])
   (:gen-class))
 
 (require-python '[pysentimiento :as sentiment])
@@ -21,28 +22,22 @@
                                                   ; Python Library
                                                   :library-path (str conda  | "bin" | "python")))]))
 
+(def analyzer  (delay 
+                 (do
+                  (println "Initialize sentiment analyzer")
+                  (sentiment/create_analyzer :task "sentiment" :lang "es"))))
 
-(def analyzer  (delay (sentiment/create_analyzer :task "sentiment" :lang "es")))
-
+(def sentiment-values {"NEG" "Negativo" "POS" "Positivo"  "NEU" "Neutro"})
 
 (def routes
- [["/health" {:get {:handler (fn [& x ] {:status 200})}}] 
+ [["/health" {:get {:handler (fn [& _] {:status 200})}}] 
   ["/sentiment" {:post
                  {:handler 
-                  (fn [{{:keys [data]} :body-params :as req}]
+                  (fn [{{:strs [data] :as params} :params :as req}]
                     {:status 200
-                     :body {:sentiment  req #_(py/py. @analyzer predict data)}})}}]
-
-  ["/plain" ["/plus" {:get
-                      {:handler
-                       (fn [{{:strs [x y]} :query-params :as req}]
-                         {:status 200
-                          :body {:total (+ (Long/parseLong x) (Long/parseLong y))}})}
-                      :post
-                      {:handler 
-                       (fn [{{:keys [x y]} :body-params}]
-                         {:status 200
-                          :body {:total (+ x y)}})}}]]])
+                     :body (let [output (py/py. @analyzer predict data)]
+                             {:sentimiento (sentiment-values (py/get-attr output :output)) 
+                              :probabilidades (update-vals (rename-keys  (into {} (py/get-attr output :probas)) sentiment-values) #(format "%.1f%s" (* 100 %) \%))})})}}]])
 (def app
  (ring/ring-handler
    (ring/router
@@ -64,6 +59,6 @@
 (defn -main [& _args]
    (start))
 
-;; (.stop server)
+#_ (.stop server)
 (comment
   (def server (start)))
